@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+
             }
 
             @Override
@@ -172,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 point.getChildAt(position).setEnabled(true);
                 point.getChildAt(lastPointPosition).setEnabled(false);
                 lastPointPosition = position;
+
 
             }
 
