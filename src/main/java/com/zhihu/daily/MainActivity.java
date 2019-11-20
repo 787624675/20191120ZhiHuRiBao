@@ -348,9 +348,12 @@ public class MainActivity extends AppCompatActivity {
         sendRequestWithOkHttp(yesterdayNewspaper==null?newspaper.getDate():yesterdayNewspaper.getDate());
         newsList.add(new News(null,null,transDate(yesterdayNewspaper==null?newspaper.getDate():yesterdayNewspaper.getDate())));
         for(int i=0;i< yesterdayNewspaper.getStories().size();i++){
-            News news = new News(yesterdayNewspaper.getStories().get(i).getTitle(), yesterdayNewspaper.getStories().get(i).getImages()[0], yesterdayNewspaper.getStories().get(i).getHint());
+            News news = new News(yesterdayNewspaper.getStories().get(i).getTitle(), yesterdayNewspaper.getStories().get(i).getImages()[0], yesterdayNewspaper.getStories().get(i).getHint(),yesterdayNewspaper.getStories().get(i).getUrl());
             newsList.add(news);
         }
+
+        adapter2.setmNewsList(newsList);
+        adapter2.notifyDataSetChanged();
         adapter2.setMonItemClickListener(new NewsAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
@@ -361,8 +364,6 @@ public class MainActivity extends AppCompatActivity {
                 view.setBackgroundResource(R.drawable.color1);
             }
         });
-        adapter2.setmNewsList(newsList);
-        adapter2.notifyDataSetChanged();
 
     }
 
