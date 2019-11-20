@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/dates"
+        android:text="11月13日"
+        android:textSize="20sp"
+        android:textColor="#C0C0C0"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"/>
+        <View
+            android:id="@+id/line2"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#C0C0C0"/>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ZhiHuRiBao</string>
+    <string name="title_activity_news_detail">NewsDetail</string>
+</resources>
