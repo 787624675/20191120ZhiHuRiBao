@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         shouye = findViewById(R.id.shouye);
         touxiang = findViewById(R.id.touxiang);
         test = findViewById(R.id.text);
+
         OkHttpUtils okHttpUtils =  OkHttpUtils.getInstance();
 
 
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
         adapter2.notifyDataSetChanged();
         recyclerView.setAdapter(adapter2);
 
+
         RecyclerView.OnScrollListener loadingMoreListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -244,8 +246,7 @@ public class MainActivity extends AppCompatActivity {
                         });
 
                         initNewsYesterday();
-                        adapter2.notifyDataSetChanged();
-                        recyclerView.setAdapter(adapter2);
+
                     }
 
                 }
@@ -360,8 +361,9 @@ public class MainActivity extends AppCompatActivity {
                 view.setBackgroundResource(R.drawable.color1);
             }
         });
+        adapter2.setmNewsList(newsList);
         adapter2.notifyDataSetChanged();
-        recyclerView.setAdapter(adapter2);
+
     }
 
 
@@ -538,6 +540,13 @@ public class MainActivity extends AppCompatActivity {
         }
         private List<News> mNewsList;
 
+        public List<News> getmNewsList() {
+            return mNewsList;
+        }
+
+        public void setmNewsList(List<News> mNewsList) {
+            this.mNewsList = mNewsList;
+        }
 
         static class ViewHolder extends RecyclerView.ViewHolder{
             ImageView newsImage;
@@ -596,6 +605,7 @@ public class MainActivity extends AppCompatActivity {
 
             return holder;
         }
+
 
 
         @Override
