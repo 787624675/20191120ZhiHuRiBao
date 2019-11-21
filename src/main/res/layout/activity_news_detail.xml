@@ -22,5 +22,9 @@
         android:id="@+id/web_view_two_two"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/web_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

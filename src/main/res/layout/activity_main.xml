@@ -7,10 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <com.zhihu.daily.BottomScrollView
-        android:id="@+id/scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">  >
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -96,85 +93,22 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-<FrameLayout
-    android:id="@+id/view12"
-    app:layout_constraintTop_toTopOf="@id/toolbar1"
-    android:layout_width="match_parent"
-    android:layout_height="360dp">
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp0"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toTopOf="@+id/toolbar1" />
-    <View
-        android:id="@+id/gradient"
-        android:layout_width="match_parent"
-        android:background="@drawable/gradient_for_viewpager"
-        android:layout_marginTop="200dp"
-        android:layout_height="200dp"/>
-
-    <TextView
-        android:id="@+id/sum"
-        android:layout_marginTop="250dp"
-        android:layout_marginLeft="40dp"
-        android:text="今日新闻概述"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/writer"
-        android:textColor="#F0F0F0"
-        android:text="作者/佚名"
-        android:layout_marginTop="330dp"
-        android:layout_marginLeft="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <LinearLayout
-
-        android:orientation="horizontal"
-        android:id="@+id/point"
-        android:layout_width="match_parent"
-        android:layout_marginRight="20dp"
-        android:layout_height="30dp"
-        android:gravity="right"
-        android:layout_marginTop="340dp"
-
-        />
 
 
-</FrameLayout>
 
-<com.aspsine.swipetoloadlayout.SwipeRefreshHeaderLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <com.aspsine.swipetoloadlayout.SwipeRefreshHeaderLayout
-        android:id="@+id/swipe_refresh_header"
-        android:layout_width="match_parent"
-        android:tooltipText="刷新中......"
-        android:layout_height="80dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/swipe_target"
         android:layout_width="match_parent"
-        android:layout_height="280dp"/>
-    <com.aspsine.swipetoloadlayout.SwipeLoadMoreFooterLayout
-        android:id="@+id/swipe_load_more_footer"
-        android:tooltipText="加载中..."
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-</com.aspsine.swipetoloadlayout.SwipeRefreshHeaderLayout>
+        android:layout_height="match_parent"/>
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
+
+
 
 
     </LinearLayout>
-    </com.zhihu.daily.BottomScrollView>
+
 
 
 

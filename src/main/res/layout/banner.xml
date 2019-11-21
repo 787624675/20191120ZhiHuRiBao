@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <FrameLayout
+        android:id="@+id/view122"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp02"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="0dp"
+             />
+        <View
+            android:id="@+id/gradient2"
+            android:layout_width="match_parent"
+            android:background="@drawable/gradient_for_viewpager"
+            android:layout_marginTop="200dp"
+            android:layout_height="200dp"/>
+
+        <TextView
+            android:id="@+id/sum2"
+            android:layout_marginTop="250dp"
+            android:layout_marginLeft="40dp"
+            android:text="今日新闻概述"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/writer2"
+            android:textColor="#F0F0F0"
+            android:text="作者/佚名"
+            android:layout_marginTop="330dp"
+            android:layout_marginLeft="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+
+            android:orientation="horizontal"
+            android:id="@+id/point2"
+            android:layout_width="match_parent"
+            android:layout_marginRight="20dp"
+            android:layout_height="30dp"
+            android:gravity="right"
+            android:layout_marginTop="340dp"
+
+            />
+
+
+    </FrameLayout>
+
+</LinearLayout>
