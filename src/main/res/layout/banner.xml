@@ -14,7 +14,7 @@
             android:layout_height="400dp"
             android:layout_marginTop="0dp"
              />
-        <View
+        <ImageView
             android:id="@+id/gradient2"
             android:layout_width="match_parent"
             android:background="@drawable/gradient_for_viewpager"

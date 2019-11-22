@@ -1,6 +1,7 @@
 package com.zhihu.daily.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.zhihu.daily.R;
+import com.zhihu.daily.viewholder.BannerViewHolder;
 import com.zhihu.daily.viewholder.News;
 import com.zhihu.daily.viewholder.NewsViewHolder;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,16 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     //设置列表的点击监听器
     private OnItemClickListener monItemClickListener;
+    private ArrayList<Bitmap> bitmap_one;
+
+    public ArrayList<Bitmap> getBitmap_one() {
+        return bitmap_one;
+    }
+
+    public void setBitmap_one(ArrayList<Bitmap> bitmap_one) {
+        this.bitmap_one = bitmap_one;
+    }
+
     public interface OnItemClickListener{
         void onItemClicked(View view,int position);
     }
@@ -34,17 +47,66 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<News> mNewsList;
     private List<News> topNews;
     private List<ImageView> imageViewList;
+    private List<ImageView> points;
+    int[] gradients;
+    private ArrayList<ImageView> gradients_one;
 
-    public NewsAdapter2(List<News> mNewsList, List<News> topNews, List<ImageView> imageViewList) {
-        this.mNewsList = mNewsList;
-        this.topNews = topNews;
+    public ArrayList<ImageView> getGradients_one() {
+        return gradients_one;
+    }
+
+    public void setGradients_one(ArrayList<ImageView> gradients_one) {
+        this.gradients_one = gradients_one;
+    }
+
+    public List<ImageView> getImageViewList() {
+        return imageViewList;
+    }
+
+    public void setImageViewList(List<ImageView> imageViewList) {
         this.imageViewList = imageViewList;
     }
 
-    public NewsAdapter2(List<News> mNewsList, List<News> topNews) {
+    public List<ImageView> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<ImageView> points) {
+        this.points = points;
+    }
+
+    public int[] getGradients() {
+        return gradients;
+    }
+
+    public void setGradients(int[] gradients) {
+        this.gradients = gradients;
+    }
+
+    public NewsAdapter2(List<News> mNewsList, List<News> topNews, List<ImageView> imageViewList, List<ImageView> points, int[] gradients) {
         this.mNewsList = mNewsList;
         this.topNews = topNews;
+        this.imageViewList = imageViewList;
+        this.points = points;
+        this.gradients = gradients;
+
     }
+    public NewsAdapter2(List<News> mNewsList, List<News> topNews, List<ImageView> imageViewList, List<ImageView> points, ArrayList<ImageView> gradient_one) {
+        this.mNewsList = mNewsList;
+        this.topNews = topNews;
+        this.imageViewList = imageViewList;
+        this.points = points;
+        this.gradients_one = gradient_one;
+
+    }
+    public NewsAdapter2(List<News> mNewsList, List<News> topNews, List<ImageView> imageViewList,List<ImageView> points) {
+        this.mNewsList = mNewsList;
+        this.topNews = topNews;
+        this.imageViewList = imageViewList;
+        this.points = points;
+    }
+
+
 
     public List<News> getTopNews() {
         return topNews;
@@ -64,10 +126,7 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
 
-    public NewsAdapter2(List<News> newsList){
-        mNewsList = newsList;
 
-    }
 
 
 
@@ -94,96 +153,65 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
     }
-    public class BannerViewHolder extends RecyclerView.ViewHolder {
-        public BannerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.sum2);
-            writer = itemView.findViewById(R.id.writer2);
-            gradient = itemView.findViewById(R.id.gradient2);
-            viewPager = itemView.findViewById(R.id.vp02);
-            point = itemView.findViewById(R.id.point2);
-            imageView = itemView.findViewById(R.id.imageview);
-
-        }
-
-        public TextView getTitle() {
-            return title;
-        }
-
-        public void setTitle(TextView title) {
-            this.title = title;
-        }
-
-        public TextView getWriter() {
-            return writer;
-        }
-
-        public void setWriter(TextView writer) {
-            this.writer = writer;
-        }
-
-        public View getGradient() {
-            return gradient;
-        }
-
-        public void setGradient(View gradient) {
-            this.gradient = gradient;
-        }
-
-        public ViewPager getViewPager() {
-            return viewPager;
-        }
-
-        public void setViewPager(ViewPager viewPager) {
-            this.viewPager = viewPager;
-        }
-
-        public LinearLayout getPoint() {
-            return point;
-        }
-
-        public void setPoint(LinearLayout point) {
-            this.point = point;
-        }
-
-        TextView title;
-        TextView writer;
-        View gradient;
-        ViewPager viewPager;
-        LinearLayout point;
-        ImageView imageView;
-
-        public ImageView getImageView() {
-            return imageView;
-        }
-
-        public void setImageView(ImageView imageView) {
-            this.imageView = imageView;
-        }
-
-        public ArrayList<ImageView> getImageViews() {
-            return imageViews;
-        }
-
-        public void setImageViews(ArrayList<ImageView> imageViews) {
-            this.imageViews = imageViews;
-        }
-
-        ArrayList<ImageView> imageViews;
-
-
-    }
 
 
     @SuppressLint("CheckResult")
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
 
         if (holder.getItemViewType()==3){
+
             final BannerViewHolder bannerViewHolder = (BannerViewHolder)holder;
             bannerViewHolder.getTitle().setText(topNews.get(position).getTitle());
             bannerViewHolder.getWriter().setText(topNews.get(position).getReader());
-            bannerViewHolder.viewPager.setAdapter(new PagerAdapter1(imageViewList));
-            bannerViewHolder.viewPager.setCurrentItem(0);
+            bannerViewHolder.getViewPager().setAdapter(new PagerAdapter1(imageViewList));
+            bannerViewHolder.getViewPager().setCurrentItem(0);
+            final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(18,18);
+            params.rightMargin = 20;
+
+
+            for (int i = 0;i<imageViewList.size();i++){
+                points.get(i).setLayoutParams(params);
+                points.get(i).setImageResource(R.drawable.point_bg);
+                if(i==0){
+                points.get(i).setEnabled(true);
+            }else {
+                points.get(i).setEnabled(false);
+            }
+                bannerViewHolder.getPoint().addView(points.get(i));
+            }
+      //      bannerViewHolder.getGradient().setImageBitmap(bitmap_one.get(0));
+//            for(int i = 0; i < points.size();i++){
+//                bannerViewHolder.getPoint().addView(points.get(position));
+//            }
+            bannerViewHolder.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+
+                    bannerViewHolder.getTitle().setText(topNews.get(position).getTitle());
+                    bannerViewHolder.getWriter().setText(topNews.get(position).getReader());
+                    bannerViewHolder.getGradient().setBackgroundResource(gradients[position]);
+                //    bannerViewHolder.getGradient().setImageBitmap(bitmap_one.get(position));
+                    bannerViewHolder.getPoint().getChildAt(position).setEnabled(true);
+
+
+                    bannerViewHolder.getPoint().getChildAt(position==0?4:position-1).setEnabled(false);
+
+               //     bannerViewHolder.getGradient().setBackground();
+                    bannerViewHolder.setLast(position) ;
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
 
 
 

@@ -26,6 +26,11 @@ public class PagerAdapter1 extends PagerAdapter {
 
         this.imageViews = imageViews;
     }
+    public PagerAdapter1(List<ImageView> imageViews,List<ImageView> points) {
+
+        this.imageViews = imageViews;
+        this.points = points;
+    }
 
     public List<ImageView> getImageViews() {
         return imageViews;

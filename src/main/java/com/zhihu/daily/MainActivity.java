@@ -1,7 +1,9 @@
 package com.zhihu.daily;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -10,6 +12,15 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.zhihu.daily.adapter.NewsAdapter2;
 import com.zhihu.daily.adapter.PagerAdapter1;
@@ -36,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -76,8 +90,16 @@ public class MainActivity extends AppCompatActivity {
     private CircleImageView touxiang;
     private RecyclerView recyclerView ;
     private TextView test ;
+    private ArrayList<ImageView> points = new ArrayList<>();
+    private ArrayList<ImageView> gradient_one = new ArrayList<>();
+    private ArrayList<ImageView> gradient_zero = new ArrayList<>();
     Gson gson = new Gson();
+    private Canvas mCanvas;
+    private Paint mPaint;
+    Bitmap bgBitmap;
 
+    int i1;
+    private ArrayList<Bitmap> bitmap_one;
 
 
     public MainActivity() {
@@ -95,15 +117,53 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.vp02);
 
 
+
         while(newspaper==null) {
         }
 
         for(int i=0;i<5;i++){
+            i1 = i;
             ImageView imageView = new ImageView(this);
             Glide.with(this).load(newspaper.getTop_stories().get(i).getImage()).into(imageView);
             images.add(imageView);
+            gradient_one.add(imageView);
+            ImageView point1 = new ImageView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(40,18);
+            params.rightMargin = 30;
+            point1.setLayoutParams(params);
+            point1.setBackgroundResource(R.drawable.point_bg);
+            if(i==0){
+                point1.setEnabled(true);
+            }else {
+                point1.setEnabled(false);
+            }
+            points.add(point1);
+
+//           Bitmap bm  ;
+//
+//
+//            Palette.from(bm).generate(new Palette.PaletteAsyncListener(){
+//
+//                @Override
+//                public void onGenerated(@Nullable Palette palette) {
+//                    if(palette==null)return;
+//                    //palette取色不一定取得到某些特定的颜色，这里通过取多种颜色来避免取不到颜色的情况
+//                    if (palette.getDarkVibrantColor(Color.TRANSPARENT) != Color.TRANSPARENT) {
+//                        createLinearGradientBitmap(palette.getDarkVibrantColor(Color.TRANSPARENT), palette.getVibrantColor(Color.TRANSPARENT),gradient_one.get(i1),bitmap_one);
+//                    } else if (palette.getDarkMutedColor(Color.TRANSPARENT) != Color.TRANSPARENT) {
+//                        createLinearGradientBitmap(palette.getDarkMutedColor(Color.TRANSPARENT), palette.getMutedColor(Color.TRANSPARENT),gradient_one.get(i1),bitmap_one);
+//                    } else {
+//                        createLinearGradientBitmap(palette.getLightMutedColor(Color.TRANSPARENT), palette.getLightVibrantColor(Color.TRANSPARENT),gradient_one.get(i1),bitmap_one);
+//                    }
+//
+//                }
+//            });
+
+
+
 
         }
+
 
 
 
@@ -129,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
         shouye = findViewById(R.id.shouye);
         touxiang = findViewById(R.id.touxiang);
         test = findViewById(R.id.text);
-
 
         OkHttpUtils okHttpUtils =  OkHttpUtils.getInstance();
 
@@ -158,7 +217,9 @@ public class MainActivity extends AppCompatActivity {
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter2 = new NewsAdapter2(newsList,topNewsList,images);
+        adapter2 = new NewsAdapter2(newsList,topNewsList,images,points,gradient_one);
+        adapter2.setGradients(gradients);
+        adapter2.setBitmap_one(bitmap_one);
         if(newsList!=null){
             for(int i=0;i<newsList.size();i++){
                 for(int j=0;j<i;j++){
@@ -236,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         adapter2.setMonItemClickListener(new NewsAdapter2.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
@@ -291,12 +353,7 @@ public class MainActivity extends AppCompatActivity {
 //
 //            @Override
 //            public void onPageSelected(int position) {
-//                bannerViewHolder1.getTitle().setText(newspaper.getTop_stories().get(position).getTitle());
-//                bannerViewHolder1.getWriter().setText(newspaper.getTop_stories().get(position).getHint());
-//                bannerViewHolder1.getGradient().setBackgroundResource(gradients[position]);
-//                bannerViewHolder1.getPoint().getChildAt(position).setEnabled(true);
-//                bannerViewHolder1.getPoint().getChildAt(lastPointPosition).setEnabled(false);
-//                lastPointPosition = position;
+//
 //
 //
 //            }
@@ -381,6 +438,19 @@ public class MainActivity extends AppCompatActivity {
             News news = new News(yesterdayNewspaper.getStories().get(i).getTitle(), yesterdayNewspaper.getStories().get(i).getImages()[0], yesterdayNewspaper.getStories().get(i).getHint(),yesterdayNewspaper.getStories().get(i).getUrl());
             newsList.add(news);
         }
+        if(newsList!=null){
+            for(int i =0;i<newsList.size();i++){
+                for(int j =0;j<i;j++){
+                    if(j<newsList.size()-1){
+                    if(newsList.get(j).getReader().equals(newsList.get(i).getReader())){
+                        newsList.remove(j);
+                    }
+                    }
+
+                }
+            }
+        }
+
 
         adapter2.setmNewsList(newsList);
         adapter2.notifyDataSetChanged();
@@ -515,7 +585,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        test.setText(e.getMessage());
+
                     }
                 });
 
@@ -579,17 +649,37 @@ public class MainActivity extends AppCompatActivity {
         return newDate;
     }
 
+    //......省略一些
 
 
 
 
+    //创建线性渐变背景色
+    private void createLinearGradientBitmap(int darkColor,int color,ImageView ivbg,ArrayList<Bitmap> bitmap_one) {
+        int bgColors[] = new int[2];
+        bgColors[0] = darkColor;
+        bgColors[1] = color;
 
 
+        if(bgBitmap==null){
+            bgBitmap= Bitmap.createBitmap(ivbg.getWidth(),ivbg.getHeight(), Bitmap.Config.ARGB_4444);
+        }
+        if(mCanvas==null){
+            mCanvas=new Canvas();
+        }
+        if(mPaint==null){
+            mPaint=new Paint();
+        }
+        mCanvas.setBitmap(bgBitmap);
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+        LinearGradient gradient=new LinearGradient(0, 0, 0, bgBitmap.getHeight(),bgColors[0],bgColors[1], Shader.TileMode.CLAMP);
+        mPaint.setShader(gradient);
+        RectF rectF=new RectF(0,0,bgBitmap.getWidth(),bgBitmap.getHeight());
+        // mCanvas.drawRoundRect(rectF,16,16,mPaint); 这个用来绘制圆角的哈
+        mCanvas.drawRect(rectF,mPaint);
+        bitmap_one.add(bgBitmap);
 
-
-
-
-
+    }
 
 
 
