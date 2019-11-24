@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.zhihu.daily.MainActivity.newsList;
+import static com.zhihu.daily.MainActivity.newspaper;
 import static com.zhihu.daily.MainActivity.url1;
 import static com.zhihu.daily.MainActivity.url2;
+import static com.zhihu.daily.MainActivity.yesterdayNewspaper;
 
 public class NewsDetail extends AppCompatActivity implements ViewOfNewsDetail {
     private ArrayList<String> urlList;
@@ -49,9 +51,12 @@ public class NewsDetail extends AppCompatActivity implements ViewOfNewsDetail {
 //        webView_two.loadUrl(url1);
         urlList = getIntent().getStringArrayListExtra("urls");
         position1 = getIntent().getIntExtra("position",1);
-        for(int i =0;i<urlList.size();i++){
-            addView(webViews,urlList.get(i));
+        for(int i =0;i<newsList.size();i++){
+            if(newsList.get(i).getImageUrl()!=null){
+                addView(webViews,newsList.get(i).getUrl());
+            }
         }
+
         WebPageAdapter adapter = new WebPageAdapter(webViews);
         webScroll.setAdapter(adapter);
         webScroll.setCurrentItem(position1);

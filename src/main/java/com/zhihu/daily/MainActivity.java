@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -55,37 +55,27 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements ViewOfMainActivity {
     private SwipeRefreshLayout mRefreshLayout;
-    private BottomScrollView mScrollView;
     public static String url1;
     public static String url0;
     public static String url2;
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler();
     public static Newspaper newspaper;
-    private String result;
-    private YesterdayNewspaper yesterdayNewspaper;
+    public static YesterdayNewspaper yesterdayNewspaper;
     private TextView day;
     private TextView month;
     private TextView shouye;
-    private ViewPager viewPager;
-    private TextView sum;
-    private TextView writer;
-    private LinearLayout point;
     private static int[] image = {R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4,R.drawable.p5};
     private static int[] gradients = {R.drawable.gradient_for_viewpager,R.drawable.gradient_for_viewpager_1,R.drawable.gradient_for_viewpager_2,R.drawable.gradient_for_viewpager_3,R.drawable.gradient_for_viewpager_4};
-    private View gradient;
     private NewsAdapter2 adapter2;
     private  ArrayList<ImageView> images = new ArrayList<>();
     private static int lastPointPosition;
     public static List<News> newsList = new ArrayList<>();
     private List<News> topNewsList = new ArrayList<>();
-    private List<News> yesterdayNewspaperList = new ArrayList<>();
     private CircleImageView touxiang;
     private RecyclerView recyclerView ;
-    private TextView test ;
     private ArrayList<ImageView> points = new ArrayList<>();
     private ArrayList<ImageView> gradient_one = new ArrayList<>();
-    private ArrayList<ImageView> gradient_zero = new ArrayList<>();
     private ArrayList<String> urlList = new ArrayList<>();
     Gson gson = new Gson();
     private Canvas mCanvas;
@@ -107,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
         
 
         sendRequestWithOkHttp();
-        viewPager = findViewById(R.id.vp02);
 
 
 
@@ -186,22 +175,12 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
         }
         recyclerView = findViewById(R.id.swipe_target);
         mRefreshLayout = findViewById(R.id.refresh_layout);
-       // mScrollView = findViewById(R.id.scroll_view);
-//        viewPager = findViewById(R.id.vp0);
-//        sum = findViewById(R.id.sum);
-//        point = findViewById(R.id.point);
-//        writer = findViewById(R.id.writer);
-//        gradient =   findViewById(R.id.gradient) ;
+
 
         day = findViewById(R.id.day);
         month = findViewById(R.id.month);
         shouye = findViewById(R.id.shouye);
         touxiang = findViewById(R.id.touxiang);
-        test = findViewById(R.id.text);
-
-        OkHttpUtils okHttpUtils =  OkHttpUtils.getInstance();
-
-
 
 
         touxiang.setOnClickListener(new View.OnClickListener() {
@@ -252,15 +231,7 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
             }
             @SuppressLint("HandlerLeak")
 
-            Handler handler1 = new Handler(){
-                public void handleMessage(Message msg){
-                    super.handleMessage(msg);
-                    if(true){
 
-                    }
-
-                }
-            } ;
             @Override
             public void onScrolled(@NonNull final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -270,18 +241,6 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
                     int totalItemCount = layoutManager.getItemCount();
                     int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
                     if((visibleItemCount + pastVisiblesItems) >= totalItemCount){
-
-//                        new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                try {
-//                                    Thread.sleep(3000);
-//                                } catch (InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        });
-
                         initNewsYesterday();
 
                     }
@@ -326,64 +285,6 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
             }
         });
 
-
-        //
-
-
-
-
-
-
-
-
-
-//        for(int i =0;i<image.length;i++){
-//            //添加图片
-//
-//            ImageView imageView = new ImageView(this);
-//            Glide.with(this).load(newspaper.getTop_stories().get(i).getImage()).into(imageView);
-//            images.add(imageView);
-//            lastPointPosition = 0;
-//            //添加图片的指示器
-//            ImageView point1 = new ImageView(this);
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(18,18);
-//            params.rightMargin = 10;
-//            point1.setLayoutParams(params);
-//            point1.setBackgroundResource(R.drawable.point_bg);
-//            if(i==0){
-//                point1.setEnabled(true);
-//            }else {
-//                point1.setEnabled(false);
-//            }
-//            bannerViewHolder1.getPoint().addView(point1);
-//        }
-//        //添加图片对应的文字
-//        bannerViewHolder1.getTitle().setText(newspaper.getTop_stories().get(0).getTitle());
-//        bannerViewHolder1.getWriter().setText(newspaper.getTop_stories().get(0).getHint());
-//
-//        bannerViewHolder1.getViewPager().setAdapter(new MyPagerAdapter());
-//        bannerViewHolder1.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//
-//
-//
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-
-
-        //Viewpager(Banner)
 
 
         //这一段用来设置日期
@@ -490,7 +391,14 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
                 }
                 Intent intent = new Intent(MainActivity.this,NewsDetail.class);
                 intent.putStringArrayListExtra("urls",urlList);
-                intent.putExtra("position",position);
+                int position1=position;
+                for(int i =0;i<position;i++){
+                    if(newsList.get(i).getImageUrl()==null){
+                        position1--;
+                    }
+                }
+                intent.putExtra("position",position1);
+
                 startActivity(intent);
                 view.setBackgroundResource(R.drawable.color1);
             }
@@ -503,45 +411,6 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
         Toast.makeText(this, "请确认网络连接再试哦~", Toast.LENGTH_SHORT).show();
 
     }
-
-
-    //ViewPager的适配器
-    private class MyPagerAdapter extends PagerAdapter{
-        @Override
-        public int getCount() {
-            return image.length;
-        }
-        @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view==object;
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
-            container.addView(images.get(position));
-            images.get(position).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    url1 = newspaper.getTop_stories().get(position).getUrl();
-                    startActivity(new Intent(MainActivity.this,NewsDetail.class));
-                }
-            });
-            return images.get(position);
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            container.removeView((View) object);
-            object=null;
-        }
-    }
-
-
-
-
-
-
 
     //设置0.5秒后加载试图消失
     public void initAction() {
@@ -558,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements ViewOfMainActivit
 
                         mRefreshLayout.setRefreshing(false);
                     }
-                }, 2000);
+                }, 500);
             }
         });
 

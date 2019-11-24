@@ -140,7 +140,7 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         else if (viewType==1){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.for_date,parent,false);
-            return new NewsViewHolder(view,monItemClickListener);
+            return new NewsViewHolder(view);
         }else{
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.news_item,parent,false);
@@ -201,6 +201,7 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     bannerViewHolder.getGradient().setBackgroundResource(gradients[position]);
                     bannerViewHolder.getPoint().getChildAt(position).setEnabled(true);
                     bannerViewHolder.getPoint().getChildAt(position==0?4:position-1).setEnabled(false);
+                    bannerViewHolder.getPoint().getChildAt(position==4?1:position+1).setEnabled(false);
                     bannerViewHolder.setLast(position) ;
 
                 }

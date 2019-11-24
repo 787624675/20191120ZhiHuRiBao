@@ -13,6 +13,10 @@ import com.zhihu.daily.adapter.NewsAdapter2;
 public class NewsViewHolder extends RecyclerView.ViewHolder {
     public NewsViewHolder(@NonNull View itemView) {
         super(itemView);
+        newsImage = itemView.findViewById(R.id.news_image);
+        newsTitle = itemView.findViewById(R.id.news_title);
+        newsReader = itemView.findViewById(R.id.news_reader);
+        dates = itemView.findViewById(R.id.dates);
     }
     ImageView newsImage;
     TextView newsTitle;
