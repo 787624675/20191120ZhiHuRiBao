@@ -1,9 +1,7 @@
 package com.zhihu.daily;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,7 +18,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,11 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
+import com.zhihu.daily.TopNewsDetail.TopNewsDetail;
+import com.zhihu.daily.ViewOfMain.ViewOfMainActivity;
 import com.zhihu.daily.adapter.NewsAdapter2;
-import com.zhihu.daily.adapter.PagerAdapter1;
 import com.zhihu.daily.bean.Newspaper;
 import com.zhihu.daily.bean.YesterdayNewspaper;
 import com.zhihu.daily.viewholder.News;
@@ -49,7 +45,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -58,16 +53,15 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class MainActivity extends AppCompatActivity {
-
-
-
+public class MainActivity extends AppCompatActivity implements ViewOfMainActivity {
     private SwipeRefreshLayout mRefreshLayout;
     private BottomScrollView mScrollView;
     public static String url1;
+    public static String url0;
+    public static String url2;
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler();
-    private static Newspaper newspaper;
+    public static Newspaper newspaper;
     private String result;
     private YesterdayNewspaper yesterdayNewspaper;
     private TextView day;
@@ -78,13 +72,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView writer;
     private LinearLayout point;
     private static int[] image = {R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4,R.drawable.p5};
-
     private static int[] gradients = {R.drawable.gradient_for_viewpager,R.drawable.gradient_for_viewpager_1,R.drawable.gradient_for_viewpager_2,R.drawable.gradient_for_viewpager_3,R.drawable.gradient_for_viewpager_4};
     private View gradient;
     private NewsAdapter2 adapter2;
     private  ArrayList<ImageView> images = new ArrayList<>();
     private static int lastPointPosition;
-    private List<News> newsList = new ArrayList<>();
+    public static List<News> newsList = new ArrayList<>();
     private List<News> topNewsList = new ArrayList<>();
     private List<News> yesterdayNewspaperList = new ArrayList<>();
     private CircleImageView touxiang;
@@ -93,11 +86,11 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ImageView> points = new ArrayList<>();
     private ArrayList<ImageView> gradient_one = new ArrayList<>();
     private ArrayList<ImageView> gradient_zero = new ArrayList<>();
+    private ArrayList<String> urlList = new ArrayList<>();
     Gson gson = new Gson();
     private Canvas mCanvas;
     private Paint mPaint;
     Bitmap bgBitmap;
-
     int i1;
     private ArrayList<Bitmap> bitmap_one;
 
@@ -118,13 +111,19 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        while(newspaper==null) {
-        }
+        while(newspaper==null){}
+
+
+
+
+
+
 
         for(int i=0;i<5;i++){
             i1 = i;
             ImageView imageView = new ImageView(this);
             Glide.with(this).load(newspaper.getTop_stories().get(i).getImage()).into(imageView);
+
             images.add(imageView);
             gradient_one.add(imageView);
             ImageView point1 = new ImageView(this);
@@ -138,12 +137,11 @@ public class MainActivity extends AppCompatActivity {
                 point1.setEnabled(false);
             }
             points.add(point1);
+      //      Glide(newspaper.getTop_stories().get(i).getImage())
 
-//           Bitmap bm  ;
-//
-//
+
+
 //            Palette.from(bm).generate(new Palette.PaletteAsyncListener(){
-//
 //                @Override
 //                public void onGenerated(@Nullable Palette palette) {
 //                    if(palette==null)return;
@@ -158,11 +156,22 @@ public class MainActivity extends AppCompatActivity {
 //
 //                }
 //            });
-
+//
 
 
 
         }
+        for(final ImageView imageView : images){
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, TopNewsDetail.class);
+                    intent.putExtra("position",images.indexOf(imageView));
+                    startActivity(intent);
+                }
+            });
+        }
+
 
 
 
@@ -235,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter2);
 
 
+
         RecyclerView.OnScrollListener loadingMoreListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -261,16 +271,16 @@ public class MainActivity extends AppCompatActivity {
                     int pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
                     if((visibleItemCount + pastVisiblesItems) >= totalItemCount){
 
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    Thread.sleep(3000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    Thread.sleep(3000);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
 
                         initNewsYesterday();
 
@@ -293,21 +303,29 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             }
+
         }
-
-
-
 
         adapter2.setMonItemClickListener(new NewsAdapter2.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
                 view.setBackgroundResource(R.drawable.color);
                 Toast.makeText(MainActivity.this, "跳转到新闻详情页", Toast.LENGTH_SHORT).show();
+                if(position>0){
+                    url0 = newsList.get(position-1).getUrl();
+                }
                 url1 = newsList.get(position).getUrl();
-                startActivity(new Intent(MainActivity.this,NewsDetail.class));
+                if(position<newsList.size()-1){
+                    url2 = newsList.get(position+1).getUrl();
+                }
+                Intent intent = new Intent(MainActivity.this,NewsDetail.class);
+                intent.putStringArrayListExtra("urls",urlList);
+                intent.putExtra("position",position);
+                startActivity(intent);
                 view.setBackgroundResource(R.drawable.color1);
             }
         });
+
 
         //
 
@@ -422,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0;i<newspaper.getStories().size();i++){
             News news = new News(newspaper.getStories().get(i).getTitle(), newspaper.getStories().get(i).getImages()[0], newspaper.getStories().get(i).getHint(),newspaper.getStories().get(i).getUrl());
             newsList.add(news);
+            urlList.add(newspaper.getStories().get(i).getUrl());
 
         }
 
@@ -434,8 +453,11 @@ public class MainActivity extends AppCompatActivity {
 
         sendRequestWithOkHttp(yesterdayNewspaper==null?newspaper.getDate():yesterdayNewspaper.getDate());
         newsList.add(new News(null,null,transDate(yesterdayNewspaper==null?newspaper.getDate():yesterdayNewspaper.getDate())));
+        urlList.add("yes");
         for(int i=0;i< yesterdayNewspaper.getStories().size();i++){
             News news = new News(yesterdayNewspaper.getStories().get(i).getTitle(), yesterdayNewspaper.getStories().get(i).getImages()[0], yesterdayNewspaper.getStories().get(i).getHint(),yesterdayNewspaper.getStories().get(i).getUrl());
+
+            urlList.add(yesterdayNewspaper.getStories().get(i).getUrl());
             newsList.add(news);
         }
         if(newsList!=null){
@@ -459,18 +481,28 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClicked(View view, int position) {
                 view.setBackgroundResource(R.drawable.color);
                 Toast.makeText(MainActivity.this, "跳转到新闻详情页", Toast.LENGTH_SHORT).show();
+                if(position>0){
+                    url0 = newsList.get(position-1).getUrl();
+                }
                 url1 = newsList.get(position).getUrl();
-                startActivity(new Intent(MainActivity.this,NewsDetail.class));
+                if(position<newsList.size()-1){
+                    url2 = newsList.get(position+1).getUrl();
+                }
+                Intent intent = new Intent(MainActivity.this,NewsDetail.class);
+                intent.putStringArrayListExtra("urls",urlList);
+                intent.putExtra("position",position);
+                startActivity(intent);
                 view.setBackgroundResource(R.drawable.color1);
             }
         });
 
     }
 
+    @Override
+    public void noInternet() {
+        Toast.makeText(this, "请确认网络连接再试哦~", Toast.LENGTH_SHORT).show();
 
-
-
-
+    }
 
 
     //ViewPager的适配器
@@ -512,7 +544,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //设置0.5秒后加载试图消失
-    private void initAction() {
+    public void initAction() {
         //模拟下拉刷新，0.5秒后，下拉刷新状态视图消失
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -544,7 +576,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //打开程序时发送请求
-    private void sendRequestWithOkHttp(){
+    public void sendRequestWithOkHttp(){
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url("https://news-at.zhihu.com/api/3/news/latest").get().build();
         final Call call = client.newCall(request);

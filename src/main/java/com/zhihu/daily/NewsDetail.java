@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.zhihu.daily.NewsDetail1.ViewOfNewsDetail;
 import com.zhihu.daily.adapter.WebPageAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,11 +19,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.zhihu.daily.MainActivity.newsList;
 import static com.zhihu.daily.MainActivity.url1;
+import static com.zhihu.daily.MainActivity.url2;
 
-public class NewsDetail extends AppCompatActivity {
+public class NewsDetail extends AppCompatActivity implements ViewOfNewsDetail {
+    private ArrayList<String> urlList;
+    private ArrayList<WebView> webViews = new ArrayList<>();
+    private int position1;
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -35,23 +42,55 @@ public class NewsDetail extends AppCompatActivity {
         WebView webView_two = findViewById(R.id.web_view_two_two);
         ViewPager webScroll = findViewById(R.id.web_scroll);
 
-
-        webView_two.getSettings().setJavaScriptEnabled(true);
-        webView_two.getSettings().setBlockNetworkImage(false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            webView_two.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-
+//
+//        webView_two.getSettings().setJavaScriptEnabled(true);
+//        webView_two.getSettings().setBlockNetworkImage(false);
+//
+//        webView_two.loadUrl(url1);
+        urlList = getIntent().getStringArrayListExtra("urls");
+        position1 = getIntent().getIntExtra("position",1);
+        for(int i =0;i<urlList.size();i++){
+            addView(webViews,urlList.get(i));
         }
-        webView_two.setWebViewClient(new WebViewClient());
-        webView_two.loadUrl(url1);
+        WebPageAdapter adapter = new WebPageAdapter(webViews);
+        webScroll.setAdapter(adapter);
+        webScroll.setCurrentItem(position1);
+
+        webScroll.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
     @SuppressLint("SetJavaScriptEnabled")
-    private void addView(List<WebView> webViewList, String url){
+    public void addView(List<WebView> webViewList, String url){
         WebView webView = new WebView(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+
+        }
+        webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setBlockNetworkImage(false);
+        webView.loadUrl(url);
+        webViewList.add(webView);
 
     }
+
+
 
 }

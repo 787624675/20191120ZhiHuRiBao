@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ViewPager"></activity>
+        <activity android:name=".TopNewsDetail.TopNewsDetail"></activity>
+        <activity android:name=".ViewPager" />
         <activity android:name=".SettingPage" />
         <activity
             android:name=".NewsDetail"
