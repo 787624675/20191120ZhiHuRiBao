@@ -169,6 +169,7 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             params.rightMargin = 20;
 
 
+            bannerViewHolder.getPoint().removeAllViews();
             for (int i = 0;i<imageViewList.size();i++){
                 points.get(i).setLayoutParams(params);
                 points.get(i).setImageResource(R.drawable.point_bg);
@@ -178,10 +179,11 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 points.get(i).setEnabled(false);
             }
 
+
                 bannerViewHolder.getPoint().addView(points.get(i));//错误记录：这里把i写成position
-       //        bannerViewHolder.getPoint().addView(points.get(i));
+
             }
-      //      bannerViewHolder.getGradient().setImageBitmap(bitmap_one.get(0));
+
 
             bannerViewHolder.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -197,12 +199,10 @@ public  class NewsAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     bannerViewHolder.getTitle().setText(topNews.get(position).getTitle());
                     bannerViewHolder.getWriter().setText(topNews.get(position).getReader());
                     bannerViewHolder.getGradient().setBackgroundResource(gradients[position]);
-                 //  bannerViewHolder.getGradient().setImageBitmap(bitmap_one.get(position));
-                   bannerViewHolder.getPoint().getChildAt(position).setEnabled(true);
+                    bannerViewHolder.getPoint().getChildAt(position).setEnabled(true);
                     bannerViewHolder.getPoint().getChildAt(position==0?4:position-1).setEnabled(false);
-
-               //     bannerViewHolder.getGradient().setBackground();
                     bannerViewHolder.setLast(position) ;
+
                 }
 
                 @Override
